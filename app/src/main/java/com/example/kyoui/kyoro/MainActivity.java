@@ -1,12 +1,16 @@
-package com.example.kyoui.rhythm;
+package com.example.kyoui.kyoro;
 
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.google.android.youtube.player.YouTubeBaseActivity;
+import com.google.android.youtube.player.YouTubeInitializationResult;
+import com.google.android.youtube.player.YouTubePlayer;
+import com.google.android.youtube.player.YouTubePlayerView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,7 +18,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends YouTubeBaseActivity {
 
     private long mCount, mDelay, mPeriod, mCurrentTime;
     private ArrayList<Long> mTapTimeList1, mTapTimeList2;
@@ -26,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
 
     private SimpleDateFormat dataFormat =
             new SimpleDateFormat("mm:ss.SS", Locale.US);
+
+    String YoutubeAPI = "AIzaSyAMeuJ8mCHOCfi94FNjcAqAautMx-WGUu0";
+    YouTubePlayerView player;
+    YouTubePlayer mYouTubePlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,21 @@ public class MainActivity extends AppCompatActivity {
         stopButton = (Button) findViewById(R.id.stop_button);
         tapButton1 = (Button) findViewById(R.id.tap_button1);
         tapButton2 = (Button) findViewById(R.id.tap_button2);
+        player = (YouTubePlayerView) findViewById(R.id.player);
+
+        player.initialize(YoutubeAPI, new YouTubePlayer.OnInitializedListener() {
+
+            @Override
+            public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+                youTubePlayer.loadVideo("6j_e-7VXOHc");
+
+            }
+
+            @Override
+            public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
+
+            }
+        });
 
 
         mHandler = new Handler();

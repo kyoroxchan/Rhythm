@@ -1,4 +1,4 @@
-package com.example.kyoui.rhythm;
+package com.example.kyoui.kyoro;
 
 import org.junit.Test;
 
