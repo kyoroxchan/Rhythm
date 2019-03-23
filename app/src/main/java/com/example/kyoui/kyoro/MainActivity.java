@@ -1,12 +1,16 @@
 package com.example.kyoui.kyoro;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.kyoui.rhythm.ResultActivity;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -17,11 +21,13 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MainActivity extends YouTubeBaseActivity {
 
     private long mCount, mDelay, mPeriod, mCurrentTime;
-    private ArrayList<Long> mTapTimeList1, mTapTimeList2;
+    private ArrayList<Integer> mTapTimeList1, mTapTimeList2;
     private Timer mTimer;
     private Handler mHandler;
 
@@ -35,6 +41,8 @@ public class MainActivity extends YouTubeBaseActivity {
     YouTubePlayerView player;
     YouTubePlayer mYouTubePlayer;
 
+    EditText editText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +51,7 @@ public class MainActivity extends YouTubeBaseActivity {
         timerTextView = (TextView) findViewById(R.id.timer_text_view);
         tapTextView1 = (TextView) findViewById(R.id.tap_text_view1);
         tapTextView2 = (TextView) findViewById(R.id.tap_text_view2);
-
+        editText = (EditText) findViewById(R.id.editText);
 
         startButton = (Button) findViewById(R.id.start_button);
         stopButton = (Button) findViewById(R.id.stop_button);
@@ -55,6 +63,7 @@ public class MainActivity extends YouTubeBaseActivity {
 
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+                mYouTubePlayer = youTubePlayer;
                 youTubePlayer.loadVideo("6j_e-7VXOHc");
 
             }
@@ -74,6 +83,8 @@ public class MainActivity extends YouTubeBaseActivity {
         mCurrentTime = 0;
         mTapTimeList1 = new ArrayList<>();
         mTapTimeList2 = new ArrayList<>();
+        mTapTimeList1.add(0);
+        mTapTimeList2.add(0);
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +103,7 @@ public class MainActivity extends YouTubeBaseActivity {
                                     mCount++;
                                     mCurrentTime = mCount * mPeriod;
                                     timerTextView.setText(dataFormat.format(mCurrentTime));
+                                    mYouTubePlayer.play();
                                 }
                             });
 
@@ -110,6 +122,11 @@ public class MainActivity extends YouTubeBaseActivity {
                     timerTextView.setText(dataFormat.format(0));
                     tapTextView1.setText(dataFormat.format(0));
                     tapTextView2.setText(dataFormat.format(0));
+                    mYouTubePlayer.pause();
+                    Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
+                    intent.putExtra("1", mTapTimeList1);
+                    intent.putExtra("2", mTapTimeList2);
+                    startActivity(intent);
                 }
 
             }
@@ -118,18 +135,22 @@ public class MainActivity extends YouTubeBaseActivity {
         tapButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTapTimeList1.add(mCurrentTime);
-                tapTextView1.setText(dataFormat.format(mCurrentTime));
-                Log.d("TIME1：", mTapTimeList1.get(mTapTimeList1.size() - 1) + "");
+                if (mCurrentTime > 0) {
+                    mTapTimeList1.add((int) mCurrentTime);
+                    tapTextView1.setText(dataFormat.format(mCurrentTime));
+                    Log.d("TIME1：", mTapTimeList1.get(mTapTimeList1.size() - 1) + "");
+                }
             }
         });
 
         tapButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mTapTimeList2.add(mCurrentTime);
-                tapTextView2.setText(dataFormat.format(mCurrentTime));
-                Log.d("TIME2：", mTapTimeList2.get(mTapTimeList2.size() - 1) + "");
+                if (mCurrentTime > 0) {
+                    mTapTimeList2.add((int) mCurrentTime);
+                    tapTextView2.setText(dataFormat.format(mCurrentTime));
+                    Log.d("TIME2：", mTapTimeList2.get(mTapTimeList2.size() - 1) + "");
+                }
             }
         });
     }
@@ -143,6 +164,29 @@ public class MainActivity extends YouTubeBaseActivity {
         super.onDestroy();
     }
 
+    public void onSearchClick(View v) {
+        String url = editText.getText().toString();
+        String videoId = getYoutubeID(url);
+        mYouTubePlayer.loadVideo(videoId);
+    }
 
+    private String getYoutubeID(String youtubeUrl) {
+        if (TextUtils.isEmpty(youtubeUrl)) {
+            return "";
+        }
+        String videoId = "";
+
+        String expression =
+                "http(?:s)?:\\/\\/(?:m.)?(?:www\\.)?youtu(?:\\.be\\/|be\\.com\\/(?:watch\\?(?:feature=youtu.be\\&)?v=|v\\/|embed\\/|user\\/(?:[\\w#]+\\/)+))([^&#?\\n]+)";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(youtubeUrl);
+        if (matcher.matches()) {
+            String groupIndex1 = matcher.group(1);
+            if (groupIndex1 != null && groupIndex1.length() == 11)
+                videoId = groupIndex1;
+        }
+
+        return videoId;
+    }
 }
 
