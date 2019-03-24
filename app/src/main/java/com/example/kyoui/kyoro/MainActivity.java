@@ -3,6 +3,10 @@ package com.example.kyoui.kyoro;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -33,8 +37,10 @@ public class MainActivity extends YouTubeBaseActivity {
     private Timer mTimer;
     private Handler mHandler;
 
-    private TextView timerTextView, tapTextView1, tapTextView2;
-    private Button startButton, stopButton, tapButton1, tapButton2;
+    private TextView timerTextView, tapTextView1, tapTextView2, loadTextView;
+    private Button startButton, stopButton, tapButton1, tapButton2, playButton;
+
+    private ConstraintLayout startLayout;
 
     private SimpleDateFormat dataFormat =
             new SimpleDateFormat("mm:ss.SS", Locale.US);
@@ -53,13 +59,17 @@ public class MainActivity extends YouTubeBaseActivity {
         timerTextView = (TextView) findViewById(R.id.timer_text_view);
         tapTextView1 = (TextView) findViewById(R.id.tap_text_view1);
         tapTextView2 = (TextView) findViewById(R.id.tap_text_view2);
+        loadTextView = (TextView) findViewById(R.id.loadtext);
         editText = (EditText) findViewById(R.id.editText);
 
         startButton = (Button) findViewById(R.id.start_button);
         stopButton = (Button) findViewById(R.id.stop_button);
         tapButton1 = (Button) findViewById(R.id.tap_button1);
         tapButton2 = (Button) findViewById(R.id.tap_button2);
+        playButton = (Button) findViewById(R.id.playButton);
         player = (YouTubePlayerView) findViewById(R.id.player);
+
+        startLayout = (ConstraintLayout)findViewById(R.id.layout);
 
         player.initialize(YoutubeAPI, new YouTubePlayer.OnInitializedListener() {
 
@@ -110,7 +120,6 @@ public class MainActivity extends YouTubeBaseActivity {
             }
         });
 
-
         mHandler = new Handler();
 
         mCount = 0;
@@ -146,6 +155,16 @@ public class MainActivity extends YouTubeBaseActivity {
                         }
                     }, mDelay, mPeriod);
                 }
+            }
+        });
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startLayout.setVisibility(View.INVISIBLE);
+                tapButton1.setVisibility(View.VISIBLE);
+                tapButton2.setVisibility(View.VISIBLE);
+                startButton.setVisibility(View.VISIBLE);
+                stopButton.setVisibility(View.VISIBLE);
             }
         });
 
