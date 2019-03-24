@@ -10,7 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.kyoui.rhythm.ResultActivity;
+
+import com.example.kyoui.kyoro.R;
+import com.example.kyoui.kyoro.ResultActivity;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -37,7 +39,7 @@ public class MainActivity extends YouTubeBaseActivity {
     private SimpleDateFormat dataFormat =
             new SimpleDateFormat("mm:ss.SS", Locale.US);
 
-    String YoutubeAPI = "AIzaSyAMeuJ8mCHOCfi94FNjcAqAautMx-WGUu0";
+    String YoutubeAPI = YoutubeAccessToken.YOUTUBE_ACCESS_TOKEN;
     YouTubePlayerView player;
     YouTubePlayer mYouTubePlayer;
 
@@ -63,8 +65,42 @@ public class MainActivity extends YouTubeBaseActivity {
 
             @Override
             public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
+
                 mYouTubePlayer = youTubePlayer;
-                youTubePlayer.loadVideo("6j_e-7VXOHc");
+                mYouTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
+                    @Override
+                    public void onLoading() {
+
+                    }
+
+                    @Override
+                    public void onLoaded(String s) {
+                        // 読み込み成功したとき
+
+                    }
+
+                    @Override
+                    public void onAdStarted() {
+
+                    }
+
+                    @Override
+                    public void onVideoStarted() {
+
+                    }
+
+                    @Override
+                    public void onVideoEnded() {
+
+                    }
+
+                    @Override
+                    public void onError(YouTubePlayer.ErrorReason errorReason) {
+                        // 読み込み失敗したとき
+
+                    }
+                });
+                mYouTubePlayer.loadVideo("6j_e-7VXOHc");
 
             }
 
