@@ -1,4 +1,4 @@
-package com.example.kyoui.kyoro;
+package com.tom.kyoui.kyoro;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

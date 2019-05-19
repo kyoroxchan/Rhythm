@@ -1,13 +1,12 @@
-package com.example.kyoui.kyoro;
+package com.tom.kyoui.kyoro;
 
 import android.content.Intent;
-import android.service.autofill.TextValueSanitizer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
-
-import com.example.kyoui.kyoro.R;
 
 import java.util.ArrayList;
 
@@ -15,6 +14,8 @@ public class ResultActivity extends AppCompatActivity {
 
     private ArrayList<Integer> mTapTimeList1;
     private ArrayList<Integer> mTapTimeList2;
+    private Button newTrak;
+    private Button oldTrak;
 
     TextView resultTextView;
 
@@ -24,6 +25,8 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
         resultTextView = (TextView) findViewById(R.id.resultTextView);
+        newTrak = (Button) findViewById(R.id.button4);
+        oldTrak = (Button) findViewById(R.id.button3);
 
         Bundle extras = getIntent().getExtras();
         mTapTimeList1 = extras.getIntegerArrayList("1");
@@ -41,6 +44,21 @@ public class ResultActivity extends AppCompatActivity {
         resultTextView.setText(result + "%");
 
     }
+
+    public void newTrak(View v) {
+        Intent data = new Intent();
+        data.putExtra("isnewtrak", 1);
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
+    public void oldTrak(View v) {
+        Intent data = new Intent();
+        data.putExtra("isoldtrak", 2);
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
     private double dtw() {
         int len1 = mTapTimeList1.size() + 1;
         int len2 = mTapTimeList2.size() + 1;
@@ -65,8 +83,8 @@ public class ResultActivity extends AppCompatActivity {
         //costの計算
         for (int i = 0; i < len1 - 1; i++) {
             for (int j = 0; j < len2 - 1; j++) {
-                double x = (double) mTapTimeList1.get(i)/100.0;
-                double y = (double) mTapTimeList2.get(j)/100.0;
+                double x = (double) mTapTimeList1.get(i) / 100.0;
+                double y = (double) mTapTimeList2.get(j) / 100.0;
                 double cost = Math.sqrt(x * x + y * y);
                 double value = Math.min(matrix[i][j + 1], matrix[i + 1][j]);
                 double min = Math.min(value, matrix[i][j]);

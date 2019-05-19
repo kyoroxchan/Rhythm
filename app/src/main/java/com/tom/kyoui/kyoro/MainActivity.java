@@ -1,8 +1,9 @@
-package com.example.kyoui.kyoro;
+package com.tom.kyoui.kyoro;
 
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -11,8 +12,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 
-import com.example.kyoui.kyoro.R;
-import com.example.kyoui.kyoro.ResultActivity;
 import com.google.android.youtube.player.YouTubeBaseActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -33,8 +32,10 @@ public class MainActivity extends YouTubeBaseActivity {
     private Timer mTimer;
     private Handler mHandler;
 
-    private TextView timerTextView, tapTextView1, tapTextView2;
-    private Button startButton, stopButton, tapButton1, tapButton2;
+    private TextView timerTextView, tapTextView1, tapTextView2, loadTextView;
+    private Button startButton, stopButton, tapButton1, tapButton2, playButton;
+
+    private ConstraintLayout startLayout;
 
     private SimpleDateFormat dataFormat =
             new SimpleDateFormat("mm:ss.SS", Locale.US);
@@ -44,6 +45,8 @@ public class MainActivity extends YouTubeBaseActivity {
     YouTubePlayer mYouTubePlayer;
 
     EditText editText;
+    boolean isSearchClicked = false;
+    boolean isVideoAvailable = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,13 +56,17 @@ public class MainActivity extends YouTubeBaseActivity {
         timerTextView = (TextView) findViewById(R.id.timer_text_view);
         tapTextView1 = (TextView) findViewById(R.id.tap_text_view1);
         tapTextView2 = (TextView) findViewById(R.id.tap_text_view2);
+        loadTextView = (TextView) findViewById(R.id.loadtext);
         editText = (EditText) findViewById(R.id.editText);
 
         startButton = (Button) findViewById(R.id.start_button);
         stopButton = (Button) findViewById(R.id.stop_button);
         tapButton1 = (Button) findViewById(R.id.tap_button1);
         tapButton2 = (Button) findViewById(R.id.tap_button2);
+        playButton = (Button) findViewById(R.id.playButton);
         player = (YouTubePlayerView) findViewById(R.id.player);
+
+        startLayout = (ConstraintLayout) findViewById(R.id.layout);
 
         player.initialize(YoutubeAPI, new YouTubePlayer.OnInitializedListener() {
 
@@ -70,11 +77,17 @@ public class MainActivity extends YouTubeBaseActivity {
                 mYouTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
                     @Override
                     public void onLoading() {
+                        if (isSearchClicked)
+                            loadTextView.setText("動画取得中");
 
                     }
 
                     @Override
                     public void onLoaded(String s) {
+                        if (isSearchClicked) {
+                            loadTextView.setText("動画取得成功!!");
+                            isVideoAvailable = true;
+                        }
                         // 読み込み成功したとき
 
                     }
@@ -100,7 +113,7 @@ public class MainActivity extends YouTubeBaseActivity {
 
                     }
                 });
-                mYouTubePlayer.loadVideo("6j_e-7VXOHc");
+//                mYouTubePlayer.loadVideo("6j_e-7VXOHc");
 
             }
 
@@ -109,7 +122,6 @@ public class MainActivity extends YouTubeBaseActivity {
 
             }
         });
-
 
         mHandler = new Handler();
 
@@ -148,6 +160,18 @@ public class MainActivity extends YouTubeBaseActivity {
                 }
             }
         });
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isVideoAvailable) {
+                    startLayout.setVisibility(View.INVISIBLE);
+                    tapButton1.setVisibility(View.VISIBLE);
+                    tapButton2.setVisibility(View.VISIBLE);
+                    startButton.setVisibility(View.VISIBLE);
+                    stopButton.setVisibility(View.VISIBLE);
+                }
+            }
+        });
 
         stopButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,7 +186,7 @@ public class MainActivity extends YouTubeBaseActivity {
                     Intent intent = new Intent(getApplicationContext(), ResultActivity.class);
                     intent.putExtra("1", mTapTimeList1);
                     intent.putExtra("2", mTapTimeList2);
-                    startActivity(intent);
+                    startActivityForResult(intent, 123);
                 }
 
             }
@@ -192,6 +216,34 @@ public class MainActivity extends YouTubeBaseActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 123:
+                if (data.getIntExtra("isnewtrak", 0) == 1) {
+                    startLayout.setVisibility(View.VISIBLE);
+                    tapButton1.setVisibility(View.INVISIBLE);
+                    tapButton2.setVisibility(View.INVISIBLE);
+                    startButton.setVisibility(View.INVISIBLE);
+                    stopButton.setVisibility(View.INVISIBLE);
+                    editText.setText("");
+                    loadTextView.setText("URLを入力してください");
+                    isSearchClicked = false;
+                    isVideoAvailable = false;
+
+                } else {
+                    startLayout.setVisibility(View.INVISIBLE);
+                    tapButton1.setVisibility(View.VISIBLE);
+                    tapButton2.setVisibility(View.VISIBLE);
+                    startButton.setVisibility(View.VISIBLE);
+                    stopButton.setVisibility(View.VISIBLE);
+
+                }
+                break;
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         if (mTimer != null) {
             mTimer.cancel();
@@ -203,6 +255,8 @@ public class MainActivity extends YouTubeBaseActivity {
     public void onSearchClick(View v) {
         String url = editText.getText().toString();
         String videoId = getYoutubeID(url);
+        isSearchClicked = true;
+
         mYouTubePlayer.loadVideo(videoId);
     }
 
