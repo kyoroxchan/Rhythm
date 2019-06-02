@@ -8,7 +8,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#04D5A8">
 
         <Button
             android:id="@+id/stop_button"
@@ -30,6 +31,7 @@
             android:layout_height="25dp"
 
             android:text="TextView"
+            android:textColor="#E60EC9"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/tap_button1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -43,7 +45,7 @@
             android:layout_width="175dp"
             android:layout_height="75dp"
             android:layout_marginTop="8dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="#0000FF"
             android:text="TAP!"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -59,7 +61,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="TextView"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="#0000FF"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/tap_button1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -89,7 +91,7 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="TextView"
-            android:textColor="@color/colorAccent"
+            android:textColor="#FF0000"
             android:textSize="18sp"
             app:layout_constraintBottom_toTopOf="@+id/tap_button1"
             app:layout_constraintEnd_toEndOf="parent"
@@ -103,7 +105,7 @@
             android:layout_width="175dp"
             android:layout_height="75dp"
             android:layout_marginTop="8dp"
-            android:background="@color/colorAccent"
+            android:background="#FF0000"
             android:text="TAP!"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -129,7 +131,7 @@
             android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/background_light">
+            android:background="#04D5A8">
 
             <TextView
                 android:id="@+id/textView"
@@ -141,7 +143,7 @@
                 android:layout_marginBottom="8dp"
                 android:gravity="center"
                 android:text="Synchro\nRhythmically"
-                android:textColor="@color/colorPrimary"
+                android:textColor="#E60EC9"
                 android:textColorLink="@color/colorAccent"
                 android:textSize="30sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -185,14 +187,15 @@
 
             <TextView
                 android:id="@+id/textView4"
-                android:layout_width="200dp"
+                android:layout_width="234dp"
                 android:layout_height="75dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:gravity="center"
-                android:text="TextView"
+                android:text="お互いのリズムの感じ方を　　　　シンクロ率として表示するアプリ"
+                android:textColor="#0000FF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -209,6 +212,7 @@
                 android:layout_marginBottom="10dp"
                 android:ems="10"
                 android:inputType="textPersonName"
+                android:textColor="#E60EC9"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.253"

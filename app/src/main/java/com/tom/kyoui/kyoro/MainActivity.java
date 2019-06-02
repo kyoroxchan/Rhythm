@@ -1,6 +1,7 @@
 package com.tom.kyoui.kyoro;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -78,7 +79,8 @@ public class MainActivity extends YouTubeBaseActivity {
                     @Override
                     public void onLoading() {
                         if (isSearchClicked)
-                            loadTextView.setText("動画取得中");
+                            loadTextView.setText("動画取得中...");
+                            loadTextView.setTextColor(Color.rgb(0,0,255));
 
                     }
 
@@ -86,6 +88,7 @@ public class MainActivity extends YouTubeBaseActivity {
                     public void onLoaded(String s) {
                         if (isSearchClicked) {
                             loadTextView.setText("動画取得成功!!");
+                            loadTextView.setTextColor(Color.rgb(0,0,255));
                             isVideoAvailable = true;
                         }
                         // 読み込み成功したとき

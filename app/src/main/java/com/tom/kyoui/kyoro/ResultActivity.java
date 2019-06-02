@@ -41,7 +41,8 @@ public class ResultActivity extends AppCompatActivity {
         }
 
         double result = dtw();
-        resultTextView.setText(result + "%");
+        String formatedresult = String.format("%.2f", result);
+        resultTextView.setText(formatedresult + "%");
 
     }
 
@@ -80,19 +81,23 @@ public class ResultActivity extends AppCompatActivity {
         }
         matrix[0][0] = 0;
 
+        double sum = 0;
+
         //costの計算
         for (int i = 0; i < len1 - 1; i++) {
             for (int j = 0; j < len2 - 1; j++) {
-                double x = (double) mTapTimeList1.get(i) / 100.0;
-                double y = (double) mTapTimeList2.get(j) / 100.0;
-                double cost = Math.sqrt(x * x + y * y);
-                double value = Math.min(matrix[i][j + 1], matrix[i + 1][j]);
-                double min = Math.min(value, matrix[i][j]);
-                matrix[i + 1][j + 1] = cost + min;
+                double x = (double) mTapTimeList1.get(i) / 10000.0;
+                double y = (double) mTapTimeList2.get(j) / 10000.0;
+                sum += 1 / (Math.abs(x - y) + 1);
+//
+//                double cost = Math.sqrt(x * x + y * y);
+//                double value = Math.min(matrix[i][j + 1], matrix[i + 1][j]);
+//                double min = Math.min(value, matrix[i][j]);
+//                matrix[i + 1][j + 1] = cost + min;
             }
         }
         double cost2 = matrix[len1 - 1][len2 - 1];
-        return cost2;
+        return sum / ((len1 - 1) * (len2 - 1)) *100;
     }
 
 }
