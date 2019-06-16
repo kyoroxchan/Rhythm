@@ -33,8 +33,8 @@ public class MainActivity extends YouTubeBaseActivity {
     private Timer mTimer;
     private Handler mHandler;
 
-    private TextView timerTextView, tapTextView1, tapTextView2, loadTextView;
-    private Button startButton, stopButton, tapButton1, tapButton2, playButton;
+    private TextView timerTextView, tapTextView1, tapTextView2, loadTextView,description;
+    private Button startButton, stopButton, tapButton1, tapButton2, playButton,menu,rtButton;
 
     private ConstraintLayout startLayout;
 
@@ -66,6 +66,9 @@ public class MainActivity extends YouTubeBaseActivity {
         tapButton2 = (Button) findViewById(R.id.tap_button2);
         playButton = (Button) findViewById(R.id.playButton);
         player = (YouTubePlayerView) findViewById(R.id.player);
+        menu = (Button) findViewById(R.id.menu);
+        rtButton = (Button) findViewById(R.id.rtButton);
+        description = (TextView) findViewById(R.id.description);
 
         startLayout = (ConstraintLayout) findViewById(R.id.layout);
 
@@ -112,6 +115,8 @@ public class MainActivity extends YouTubeBaseActivity {
 
                     @Override
                     public void onError(YouTubePlayer.ErrorReason errorReason) {
+                        loadTextView.setText("動画取得失敗もう一度URLを入力してください");
+                        loadTextView.setTextColor(Color.rgb(255,0,0));
                         // 読み込み失敗したとき
 
                     }
@@ -213,6 +218,36 @@ public class MainActivity extends YouTubeBaseActivity {
                     mTapTimeList2.add((int) mCurrentTime);
                     tapTextView2.setText(dataFormat.format(mCurrentTime));
                     Log.d("TIME2：", mTapTimeList2.get(mTapTimeList2.size() - 1) + "");
+                }
+            }
+        });
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                if(isVideoAvailable){
+                    startLayout.setVisibility(View.INVISIBLE);
+                    tapButton1.setVisibility(View.INVISIBLE);
+                    tapButton2.setVisibility(View.INVISIBLE);
+                    startButton.setVisibility(View.INVISIBLE);
+                    stopButton.setVisibility(View.INVISIBLE);
+                   rtButton.setVisibility(View.VISIBLE);
+                    description.setVisibility(View.VISIBLE);
+
+                }
+            }
+        });
+        rtButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                if(isVideoAvailable){
+                    startLayout.setVisibility(View.VISIBLE);
+                    tapButton1.setVisibility(View.INVISIBLE);
+                    tapButton2.setVisibility(View.INVISIBLE);
+                    startButton.setVisibility(View.INVISIBLE);
+                    stopButton.setVisibility(View.INVISIBLE);
+                    rtButton.setVisibility(View.INVISIBLE);
+                    description.setVisibility(View.INVISIBLE);
+
                 }
             }
         });
